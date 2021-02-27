@@ -23,15 +23,6 @@ def init_logger() -> None:
     console_handler.setLevel(log_level)
     console_handler.setFormatter(formatter)
     LOG.addHandler(console_handler)
-    #
-    # time = datetime.now().strftime('%d-%m-%Y_%H-%M-%S')
-    # file_name = f'log_{time}.log'
-    # file_path = Path('/app/logs') / file_name
-    # file_handler = logging.FileHandler(str(file_path))
-    # file_handler.set_name('file_handler')
-    # file_handler.setLevel(log_level)
-    # file_handler.setFormatter(formatter)
-    # LOG.addHandler(file_handler)
 
     LOG.propagate = False
 

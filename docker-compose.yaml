@@ -4,8 +4,13 @@ services:
     build: ./app/
     env_file:
       - env.dev
-      -
   db:
-    build: ./database/
+    image: postgres:latest
+    ports:
+      - 5432:5432
+      healthcheck:
+        test: "pg_isready -U $$POSTGRES_USER"
+        retries: 10
+        interval: 10s
     env_file:
       - env.dev

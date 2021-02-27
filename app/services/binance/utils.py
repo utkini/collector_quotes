@@ -1,4 +1,4 @@
-from app.services.models import ModelResponse
+from app.services.data_models import ExchangeTickerModel
 
 exchange = 'Binance'
 
@@ -30,8 +30,8 @@ input data:
 '''
 
 
-def normalize_response(raw_ticker_data: dict, ts) -> ModelResponse:
-    return ModelResponse(
+def normalize_response(raw_ticker_data: dict, ts) -> ExchangeTickerModel:
+    return ExchangeTickerModel(
         exchange=exchange,
         symbol=raw_ticker_data.get('symbol'),
         base='I DONT KNOW',

@@ -2,9 +2,9 @@ import asyncio
 import json
 
 import aiohttp as aiohttp
-import urls
 from app.logger import LOG
 from app.services.client_interface import ClientInterface
+from app.services.kucoin import urls
 from app.services.kucoin.utils import normalize_response
 
 
@@ -18,7 +18,7 @@ class KuCoinClient(ClientInterface):
         Send a GET request to the kucoin api
         @return reponse
         """
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as session:
             LOG.info(f'GET {url}')
             async with session.get(url) as resp:
                 text = await resp.text()
@@ -36,7 +36,7 @@ class KuCoinClient(ClientInterface):
     async def get_updates(self):
         LOG.info('start get update method')
         tickers = await self._get_info_tickers()
-        tickers = tickers.get('ticker')
+        tickers = tickers.get('data').get('ticker')
         res_list = list()
         for ticker in tickers:
             res_list.append(normalize_response(ticker))

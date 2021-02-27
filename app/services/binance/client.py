@@ -2,8 +2,8 @@ import asyncio
 import json
 import time
 import aiohttp as aiohttp
-import urls
 from app.logger import LOG
+from app.services.binance import urls
 from app.services.binance.utils import normalize_response
 from app.services.client_interface import ClientInterface
 
@@ -18,7 +18,7 @@ class BinanceClient(ClientInterface):
         Send a GET request to the binance api
         @return reponse
         """
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as session:
             LOG.info(f'GET {url}')
             async with session.get(url) as resp:
                 text = await resp.text()

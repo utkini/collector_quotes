@@ -1,6 +1,6 @@
-base = 'https://api-pub.bitfinex.com/v2/'
+base = 'https://api3.binance.com'
 
-all_tickers = base + 'tickers?symbols=ALL'
+all_tickers = base + '/api/v3/ticker/24hr'
 
 
 

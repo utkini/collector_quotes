@@ -1,4 +1,4 @@
-from app.services.models import ModelResponse
+from app.services.data_models import ExchangeTickerModel
 
 exchange = 'KuCoin'
 
@@ -24,12 +24,12 @@ input data:
 '''
 
 
-def normalize_response(data: dict) -> ModelResponse:
-    return ModelResponse(
+def normalize_response(data: dict) -> ExchangeTickerModel:
+    return ExchangeTickerModel(
         exchange=exchange,
-        symbol=data.get('symbol'),
-        base='I DONT KNOW',
-        quote=data.get('averagePrice'),
+        symbol=data.get('symbol'),  # BTCUSD
+        base='I DONT KNOW',  # BTC
+        quote=data.get('averagePrice'),  # USD
         last_price=data.get('last'),
         time_received=data.get('time')
     )

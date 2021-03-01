@@ -1,16 +1,19 @@
 version: "3.8"
 services:
-  app :
+  app:
     build: ./app/
+    command: python __main__.py
     env_file:
       - env.dev
+    depends_on:
+      - db
   db:
     image: postgres:latest
     ports:
       - 5432:5432
-      healthcheck:
-        test: "pg_isready -U $$POSTGRES_USER"
-        retries: 10
-        interval: 10s
+    healthcheck:
+      test: "pg_isready -U $$POSTGRES_USER"
+      retries: 10
+      interval: 20s
     env_file:
       - env.dev

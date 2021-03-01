@@ -1,15 +1,8 @@
-import os
-
 from peewee import *
 
-params = {
-    'dbname': os.environ.get('POSTGRES_DB'),
-    'user': os.environ.get('POSTGRES_USER'),
-    'password': os.environ.get('POSTGRES_USER'),
-    'host': os.environ.get('POSTGRES_HOST')
-}
+from settings import db_params
 
-psql_db = PostgresqlDatabase(**params)
+psql_db = PostgresqlDatabase(**db_params)
 
 
 class BaseModel(Model):
@@ -24,9 +17,9 @@ class Exchanges(BaseModel):
 
 
 class ExchangeTickers(BaseModel):
-    exchange = ForeignKeyField(Exchanges),
-    symbol = CharField(max_length=64),
-    base = CharField(max_length=64),
-    quote = CharField(max_length=64),
-    last_price = DoubleField(),
+    exchange = ForeignKeyField(Exchanges)
+    symbol = CharField(max_length=64)
+    base = CharField(max_length=64)
+    quote = CharField(max_length=64)
+    last_price = DoubleField()
     time_received = DateTimeField()

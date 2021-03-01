@@ -1,10 +1,9 @@
 import asyncio
-from typing import List
 
-from app.db.db_models import Exchanges, ExchangeTickers
-from app.services import BitFinExClient, KuCoinClient, BinanceClient
-from app.services.client_interface import ClientInterface
-from app.services.data_models import ExchangeTickerModel
+from db.db_models import Exchanges, ExchangeTickers
+from logger import LOG
+from services import BitFinExClient, KuCoinClient, BinanceClient
+from services.client_interface import ClientInterface
 
 
 def get_exchange_client_by_name(exchange_name) -> ClientInterface:
@@ -17,25 +16,28 @@ def get_exchange_client_by_name(exchange_name) -> ClientInterface:
 
 
 def collect_data():
-    test_data = {
-        'exchange': 'BitFinEx',
-        'symbol': 'BTCUSD',
-        'base': 'BTC',
-        'quote': 'USD',
-        'last_price': 50000.0,
-        'time_received': 123
-    }
     exchanges_name = [exchange.name for exchange in Exchanges.select()]
-    # exchanges_name = ['bitfinex', 'kucoin', 'binance']
     clients = list()
     for exchange_name in exchanges_name:
         client = get_exchange_client_by_name(exchange_name)
         clients.append(client.get_updates())
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     result_tasks, _ = loop.run_until_complete(asyncio.wait(clients))
     for task in result_tasks:
+        exchange_name = task.result()[0].exchange
+        exchange = Exchanges.get(name=exchange_name)
+        LOG.info(f'{exchange} with {exchange_name}')
         for quote in task.result():
-            ExchangeTickers.create(**quote.as_dict())
+            ExchangeTickers.create(
+                exchange=exchange,
+                symbol=quote.symbol,
+                base=quote.base,
+                quote=quote.quote,
+                last_price=quote.last_price,
+                time_received=quote.time_received
+            )
+        LOG.info(f'tickers from {exchange_name} added')
 
 
 if __name__ == '__main__':

@@ -1,6 +1,11 @@
-from crontab import CronTab
+from base import collect_data
 
-cron = CronTab(user='root')
-job = cron.new(command='echo hello_world')
-job.minute.every(1)
-cron.write()
+from apscheduler.schedulers.blocking import BlockingScheduler
+
+from logger import LOG
+
+LOG.info('Starting')
+sched = BlockingScheduler()
+sched.add_job(collect_data, 'interval', hours=1)
+
+sched.start()

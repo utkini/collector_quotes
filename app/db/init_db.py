@@ -1,6 +1,6 @@
 from time import sleep
-
-from db.db_models import Exchanges, ExchangeTickers, PostgresqlDatabase
+from peewee import *
+from db.db_models import Exchanges, ExchangeTickers
 from logger import LOG
 
 from services import supported_exchanges
